@@ -1,4 +1,4 @@
-Peer-graded Assignment: Course Project
+Course Project: Develping data products
 ========================================================
 author: kwatanwa17
 date: 2018-9-24
@@ -109,7 +109,7 @@ shinyServer(
 About the code
 =========================================
 
-You can also see the code in the Github repository.
+You can also see the code in the Github repository: https://github.com/Kwatanwa17/DDP
 
 Than you !
 
