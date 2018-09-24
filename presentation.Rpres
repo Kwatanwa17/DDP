@@ -1,0 +1,115 @@
+Peer-graded Assignment: Course Project
+========================================================
+author: kwatanwa17
+date: 2018-9-24
+autosize: true
+
+About the app
+========================================================
+
+You can find the app here: https://kwatanwa17.shinyapps.io/courseproject/
+
+We use the following libraries:
+
+- shiny
+- ggplot2
+
+ui.R
+========================================================
+
+```{r, eval = FALSE}
+shinyUI(pageWithSidebar(
+  headerPanel("Make your plot"),
+  
+  sidebarPanel(
+    h4("Select x and y varables of the mtcars data set"),
+    h4("Also you can customize the plot using colored variable and grouped variable !"),
+    selectInput(inputId = "xvar", label = strong("X (predictor)"),
+                choices = c("mpg", "disp", "hp", "drat", "wt", "qsec"), selected = "wt"),
+    selectInput(inputId = "yvar", label = strong("Y (outcome)"),
+                choices = c("mpg", "disp", "hp", "drat", "wt", "qsec"), selected = "mpg"),
+    selectInput(inputId = "gvar", label = strong("Colored by"),
+                choices = c("cyl", "gear", "carb", "Default"), selected = "Default"),
+    selectInput(inputId = "colvar", label = strong("Separated by"),
+                choices = c("am", "vs", "Default"), selected = "Default")
+  ),
+  
+  mainPanel(
+    h3("Your plot"),
+    plotOutput("plot1")
+  )
+))
+```
+
+server.R 1
+========================================================
+
+```{r, eval=FALSE}
+shinyServer(
+  function(input, output, session) {
+    output$plot1 <- renderPlot({
+      x <- mtcars[,input$xvar]
+      y <- mtcars[,input$yvar]
+      if (input$gvar != "Default") {
+        g <- mtcars[,input$gvar]
+        g <- as.factor(g)
+      }
+      if (input$colvar != "Default") {
+        c <- mtcars[,input$colvar]
+        if (input$colvar == "am") {
+          c <- factor(c, levels = c(0,1), labels = c("Automatic", "Manual"))
+        } else {
+          c <- factor(c, levels = c(0,1), labels = c("V-shaped", "Straight"))
+        }
+      }
+      if (input$gvar != "Default" &&  input$colvar != "Default") {
+        df <- data.frame(x, y, g, c)
+      } else if (input$gvar == "Default" &&  input$colvar != "Default") {
+        df <- data.frame(x, y, c)
+      } else if (input$gvar != "Default" &&  input$colvar == "Default") {
+        df <- data.frame(x, y, g)
+      } else {
+        df <- data.frame(x, y)
+      }
+      
+      if (input$gvar == "Default" &&  input$colvar == "Default") {
+      p <- ggplot(df, aes(x,y)) +
+        geom_point(size = 5)
+      }
+      
+      if (input$gvar != "Default" &&  input$colvar == "Default") {
+        p <- ggplot(df, aes(x,y)) +
+          geom_point(size = 5, aes(col = g)) +
+          labs(color = input$gvar)
+      }
+      
+      if (input$gvar == "Default" &&  input$colvar != "Default") {
+        p <- ggplot(df, aes(x,y)) +
+          geom_point(size = 5) +
+          facet_grid(~c)
+      }
+      
+      if (input$gvar != "Default" &&  input$colvar != "Default") {
+        p <- ggplot(df, aes(x,y)) +
+          geom_point(size = 5, aes(col = g)) +
+          facet_grid(~c) +
+          labs(color = input$gvar)
+      }
+      p + 
+        xlab(input$xvar) + 
+        ylab(input$yvar) +
+        ggtitle(paste(input$xvar, " vs ", input$yvar)) 
+
+    })
+    
+  }
+)
+```
+
+About the code
+=========================================
+
+You can also see the code in the Github repository.
+
+Than you !
+

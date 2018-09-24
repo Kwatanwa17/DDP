@@ -1,0 +1,39 @@
+---
+title: "README"
+author: "kwatanwa17"
+date: "2018-9-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Readme
+
+This application creates a scatterplot based on mtcars data set, using variables that you select. 
+
+You can choose:
+
+- mpg
+- disp
+- hp
+- drat
+- wt
+- qsec
+
+Also, you can use colors for points.
+
+- cyl
+- gear
+- carb
+
+Finally, this application provides you a plot separation using:
+
+- am
+- vs
+
+
+
+
+
